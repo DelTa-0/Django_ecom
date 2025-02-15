@@ -8,3 +8,5 @@ def home(request):
         'products':products
     })
 
+def about(request):
+    return render(request,'about.html')
