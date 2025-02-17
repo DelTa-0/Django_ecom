@@ -51,18 +51,23 @@ cart page
                         <i class="fas fa-minus"></i>
                       </button>
   
-                      <div class="input-group mb-3 m-3" style="max-width: 120px;">
-                        
-                        
-                        <button class="btn btn-outline-secondary minus-btn" type="button">−</button>
-                        {%for key,value in quantities.items%}
-                        {%if key == product.id|slugify%}
-                      {{value}}
-                        {% comment %} <input type="text" class="form-control text-center quantity-input" value="{{value}}" min="1" id="qty-cart"> {% endcomment %}
-                        {%endif%}
-                        {%endfor%}
-                        <button class="btn btn-outline-secondary plus-btn" type="button">+</button>
-                       
+                      <div class="col-md-2">
+                        <select class="form-select form-select-sm" id="select{{product.id}}">
+                          
+                    {% for key, value in quantities.items %}
+                        {% if key == product.id|slugify %}
+                    <option selected>{{ value }}</option>
+                        {% endif %}
+                    {% endfor %}
+                                   
+        
+                          <option value="1">1</option>
+                          <option value="2">2</option>
+                          <option value="3">3</option>
+                          <option value="4">4</option>
+                          <option value="5">5</option>
+                        </select>
+                        </div>
                     </div>
   
                       <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
@@ -130,26 +135,34 @@ cart page
   <br><br><br>
   {%endif%}
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const minusButtons = document.querySelectorAll(".minus-btn");
-        const plusButtons = document.querySelectorAll(".plus-btn");
-        const quantityInputs = document.querySelectorAll(".quantity-input");
-
-        minusButtons.forEach((button, index) => {
-            button.addEventListener("click", function () {
-                let quantity = parseInt(quantityInputs[index].value);
-                if (quantity > 1) {
-                    quantityInputs[index].value = quantity - 1;
-                }
-            });
+    // Update Cart
+    $(document).on('click', '.update-cart', function(e){
+        e.preventDefault();
+        // grab the product id
+        var productid = $(this).data('index');
+    
+        $.ajax({
+        type: 'POST',
+        url: '{% url 'cart_update' %}',
+        data: {
+          product_id: $(this).data('index'),
+          product_qty: $('#select' + productid + ' option:selected').text(),
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+          action: 'post'
+        },
+        success: function(json){
+            //console.log(json)
+            //document.getElementById("cart_quantity").textContent = json.qty
+            location.reload();
+        },
+    
+        error: function(xhr, errmsg, err){
+    
+        }
+    
+    
         });
-
-        plusButtons.forEach((button, index) => {
-            button.addEventListener("click", function () {
-                let quantity = parseInt(quantityInputs[index].value);
-                quantityInputs[index].value = quantity + 1;
-            });
-        });
-    });
-</script>
+    
+    })
+  </script>
   {% endblock %}

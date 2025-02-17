@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from .cart import Cart
 from store.models import Product
+from django.contrib import messages
 from django.http import JsonResponse
 # Create your views here.
 def cart_summary(request):
@@ -17,7 +18,9 @@ def cart_add(request):
     if request.POST.get('action')=='post':
         #get stuff
         product_id=int(request.POST.get('product_id'))
-        product_qty=int(request.POST.get('product_qty'))
+        product_qty = request.POST.get('product_qty', '0')  # Default to '0' if empty
+        product_qty = int(product_qty) if product_qty.isdigit() else 0  # Convert safely
+
         if not product_id:
             return JsonResponse({"error": "Missing product_id"}, status=400)
         #lookup product
@@ -29,6 +32,7 @@ def cart_add(request):
         #return response
         # response=JsonResponse({'Product Name: ':product.name})
         response=JsonResponse({'qty':cart_quantity})
+        messages.success(request, ("Product Added To Cart..."))
         return response
 
 
