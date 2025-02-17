@@ -12,13 +12,14 @@ product
             <div class="col-md-6">
                 <div class="small mb-1">{{product.category}}</div>
                 <h1 class="display-5 fw-bolder">{{product.name}}</h1>
-                <div class="d-flex small text-warning mb-2">
-                    <div class="bi-star-fill"></div>
-                    &nbsp;&nbsp;Sale!&nbsp;&nbsp;
-                    <div class="bi-star-fill"></div>
-                </div>
+                
                 <div class="mb-3">
                     {%if product.in_sale%}
+                    <div class="d-flex small text-warning mb-2">
+                        <div class="bi-star-fill"></div>
+                        &nbsp;&nbsp;Sale!&nbsp;&nbsp;
+                        <div class="bi-star-fill"></div>
+                    </div>
                     <span class="text-decoration-line-through">Rs-{{product.price}}</span>
                     <span>Rs-{{product.sale_price}}</span>
                     {%else%}
@@ -27,7 +28,12 @@ product
                 </div>
                 <p class="lead">{{product.description}}</p>
                 <div class="d-flex">
-                    <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1" style="max-width: 3rem" />
+                    <div class="input-group mb-3 m-3" style="max-width: 120px;">
+                        <button class="btn btn-outline-secondary minus-btn" type="button">−</button>
+                        <input type="text" class="form-control text-center quantity-input" value="1" min="1" id="qty-cart">
+                        <button class="btn btn-outline-secondary plus-btn" type="button">+</button>
+                    </div>
+                   
                     <button class="btn btn-outline-dark flex-shrink-0" type="button" value="{{product.id}}" id="add-cart">
                         <i class="bi-cart-fill me-1"></i>
                         Add to cart
@@ -48,12 +54,14 @@ product
             url:'{%url 'cart_add'%}',
             data:{
                 product_id:$('#add-cart').val(),
+                product_qty:$('#qty-cart option:selected').text(),
                 csrfmiddlewaretoken:'{{ csrf_token }}',
                 action:'post'
             },
             success:function(json){
                 //console.log(json)
-                document.getElementById('cart_quantity').textContent=json.qty
+                document.getElementById('cart_quantity').textContent =json.qty
+                location.reload();
             },
             error:function(xhr,errmsg,err){
 
@@ -61,5 +69,28 @@ product
         });
     })
  </script>
+ <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const minusButtons = document.querySelectorAll(".minus-btn");
+        const plusButtons = document.querySelectorAll(".plus-btn");
+        const quantityInputs = document.querySelectorAll(".quantity-input");
+
+        minusButtons.forEach((button, index) => {
+            button.addEventListener("click", function () {
+                let quantity = parseInt(quantityInputs[index].value);
+                if (quantity > 1) {
+                    quantityInputs[index].value = quantity - 1;
+                }
+            });
+        });
+
+        plusButtons.forEach((button, index) => {
+            button.addEventListener("click", function () {
+                let quantity = parseInt(quantityInputs[index].value);
+                quantityInputs[index].value = quantity + 1;
+            });
+        });
+    });
+</script>
 
 {% endblock %}

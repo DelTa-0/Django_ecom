@@ -3,6 +3,7 @@
 cart page
 {% endblock %}
 {% block content %}
+{%if cart_products%}
 
 <section class="h-100 h-custom">
     <div class="container h-100 py-5">
@@ -19,20 +20,29 @@ cart page
                   <th scope="col">Price</th>
                 </tr>
               </thead>
+              {%for product in cart_products%}
               <tbody>
                 <tr>
                   <th scope="row">
                     <div class="d-flex align-items-center">
-                      <img src="https://i.imgur.com/2DsA49b.webp" class="img-fluid rounded-3"
+                      <img src="{{product.image.url}}" class="img-fluid rounded-3"
                         style="width: 120px;" alt="Book">
                       <div class="flex-column ms-4">
-                        <p class="mb-2">Thinking, Fast and Slow</p>
-                        <p class="mb-0">Daniel Kahneman</p>
+                        {%if product.in_sale%}
+                        <p class="mb-2">{{product.name}}</p>
+                        <div class="d-flex small text-warning mb-2">
+                          <div class="bi-star-fill"></div>
+                          &nbsp;&nbsp;Sale!!&nbsp;&nbsp;
+                          <div class="bi-star-fill"></div>
+                      </div>
+                      {%else%}
+                      <p class="mb-2">{{product.name}}</p>
+                      {%endif%}
                       </div>
                     </div>
                   </th>
                   <td class="align-middle">
-                    <p class="mb-0" style="font-weight: 500;">Digital</p>
+                    <p class="mb-0" style="font-weight: 500;">{{product.category}}</p>
                   </td>
                   <td class="align-middle">
                     <div class="d-flex flex-row">
@@ -41,8 +51,19 @@ cart page
                         <i class="fas fa-minus"></i>
                       </button>
   
-                      <input id="form1" min="0" name="quantity" value="2" type="number"
-                        class="form-control form-control-sm" style="width: 50px;" />
+                      <div class="input-group mb-3 m-3" style="max-width: 120px;">
+                        
+                        
+                        <button class="btn btn-outline-secondary minus-btn" type="button">−</button>
+                        {%for key,value in quantities.items%}
+                        {%if key == product.id|slugify%}
+                      {{value}}
+                        {% comment %} <input type="text" class="form-control text-center quantity-input" value="{{value}}" min="1" id="qty-cart"> {% endcomment %}
+                        {%endif%}
+                        {%endfor%}
+                        <button class="btn btn-outline-secondary plus-btn" type="button">+</button>
+                       
+                    </div>
   
                       <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
                         onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
@@ -51,10 +72,15 @@ cart page
                     </div>
                   </td>
                   <td class="align-middle">
-                    <p class="mb-0" style="font-weight: 500;">$9.99</p>
+                    {%if product.sale_price%}
+                    <p class="mb-0" style="font-weight: 500;">{{product.sale_price}}</p>
+                    {%else%}
+                    <p class="mb-0" style="font-weight: 500;">{{product.price}}</p>
+                    {%endif%}
                   </td>
                 </tr>
               </tbody>
+              {%endfor%}
             </table>
           </div>
   
@@ -64,8 +90,10 @@ cart page
               
                 <div class="col-lg-4 col-xl-3">
                   <div class="d-flex justify-content-between" style="font-weight: 500;">
-                    <p class="mb-2">Subtotal</p>
+                  
+                    <p class="mb-2">Total amount</p>
                     <p class="mb-2">$23.49</p>
+                 
                   </div>
   
                   <div class="d-flex justify-content-between" style="font-weight: 500;">
@@ -97,4 +125,31 @@ cart page
       </div>
     </div>
   </section>
+  {%else%}
+  Add items to cart the cart is currently empty!!
+  <br><br><br>
+  {%endif%}
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const minusButtons = document.querySelectorAll(".minus-btn");
+        const plusButtons = document.querySelectorAll(".plus-btn");
+        const quantityInputs = document.querySelectorAll(".quantity-input");
+
+        minusButtons.forEach((button, index) => {
+            button.addEventListener("click", function () {
+                let quantity = parseInt(quantityInputs[index].value);
+                if (quantity > 1) {
+                    quantityInputs[index].value = quantity - 1;
+                }
+            });
+        });
+
+        plusButtons.forEach((button, index) => {
+            button.addEventListener("click", function () {
+                let quantity = parseInt(quantityInputs[index].value);
+                quantityInputs[index].value = quantity + 1;
+            });
+        });
+    });
+</script>
   {% endblock %}
