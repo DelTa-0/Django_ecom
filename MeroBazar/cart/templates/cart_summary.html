@@ -51,23 +51,22 @@ cart page
                         <i class="fas fa-minus"></i>
                       </button>
   
-                      <div class="col-md-2">
-                        <select class="form-select form-select-sm" id="select{{product.id}}">
+                      <div class="col-md-2 mb-4 w-20">
+                        <select class="form-select form-select-sm" id="qty-cart" style="width: 100px;">
                           
-                    {% for key, value in quantities.items %}
-                        {% if key == product.id|slugify %}
-                    <option selected>{{ value }}</option>
-                        {% endif %}
-                    {% endfor %}
-                                   
-        
+                            {%for key,value in quantities.items%}
+                              {%if key == product.id|slugify%}
+                              <option selected>{{value}}</option>
+                              {%endif%}
+                            {%endfor%}
+                            
                           <option value="1">1</option>
                           <option value="2">2</option>
                           <option value="3">3</option>
                           <option value="4">4</option>
                           <option value="5">5</option>
                         </select>
-                        </div>
+                        
                     </div>
   
                       <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
@@ -130,6 +129,8 @@ cart page
       </div>
     </div>
   </section>
+  
+  
   {%else%}
   Add items to cart the cart is currently empty!!
   <br><br><br>

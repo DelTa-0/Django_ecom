@@ -18,8 +18,9 @@ def cart_add(request):
     if request.POST.get('action')=='post':
         #get stuff
         product_id=int(request.POST.get('product_id'))
-        product_qty = request.POST.get('product_qty', '0')  # Default to '0' if empty
-        product_qty = int(product_qty) if product_qty.isdigit() else 0  # Convert safely
+        product_qty=int(request.POST.get('product_qty'))
+        # product_qty = request.POST.get('product_qty', '0')  # Default to '0' if empty
+        # product_qty = int(product_qty) if product_qty.isdigit() else 0  # Convert safely
 
         if not product_id:
             return JsonResponse({"error": "Missing product_id"}, status=400)

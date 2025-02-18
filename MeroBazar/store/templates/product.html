@@ -27,12 +27,17 @@ product
                     {%endif%}
                 </div>
                 <p class="lead">{{product.description}}</p>
-                <div class="d-flex">
-                    <div class="input-group mb-3 m-3" style="max-width: 120px;">
-                        <button class="btn btn-outline-secondary minus-btn" type="button">−</button>
-                        <input type="text" class="form-control text-center quantity-input" value="1" min="1" id="qty-cart">
-                        <button class="btn btn-outline-secondary plus-btn" type="button">+</button>
-                    </div>
+                <div class="col-md-2">Quantity:</div>
+                <div class="col-md-2 mb-4">
+                <select class="form-select form-select-sm" id="qty-cart">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+                
+            </div>
                    
                     <button class="btn btn-outline-dark flex-shrink-0" type="button" value="{{product.id}}" id="add-cart">
                         <i class="bi-cart-fill me-1"></i>
@@ -80,28 +85,6 @@ product
     
     
     </script>
- <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const minusButtons = document.querySelectorAll(".minus-btn");
-        const plusButtons = document.querySelectorAll(".plus-btn");
-        const quantityInputs = document.querySelectorAll(".quantity-input");
 
-        minusButtons.forEach((button, index) => {
-            button.addEventListener("click", function () {
-                let quantity = parseInt(quantityInputs[index].value);
-                if (quantity > 1) {
-                    quantityInputs[index].value = quantity - 1;
-                }
-            });
-        });
-
-        plusButtons.forEach((button, index) => {
-            button.addEventListener("click", function () {
-                let quantity = parseInt(quantityInputs[index].value);
-                quantityInputs[index].value = quantity + 1;
-            });
-        });
-    });
-</script>
 
 {% endblock %}
