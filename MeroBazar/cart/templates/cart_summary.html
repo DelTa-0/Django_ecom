@@ -17,6 +17,7 @@ cart page
                   <th scope="col" class="h5">Shopping cart</th>
                   <th scope="col">category</th>
                   <th scope="col">Quantity</th>
+                  <th scope="col">option</th>
                   <th scope="col">Price</th>
                 </tr>
               </thead>
@@ -52,7 +53,7 @@ cart page
                       </button>
   
                       <div class="col-md-2 mb-4 w-20">
-                        <select class="form-select form-select-sm" id="qty-cart" style="width: 100px;">
+                        <select class="form-select form-select-sm mt-5" id="select{{product.id}}" style="width: 100px;">
                           
                             {%for key,value in quantities.items%}
                               {%if key == product.id|slugify%}
@@ -74,6 +75,9 @@ cart page
                         <i class="fas fa-plus"></i>
                       </button>
                     </div>
+                  </td>
+                  <td>
+                    <button type="button" data-index="{{product.id}}" class="btn btn-secondary mt-5 update-cart">update</button>
                   </td>
                   <td class="align-middle">
                     {%if product.sale_price%}
