@@ -77,7 +77,8 @@ cart page
                     </div>
                   </td>
                   <td>
-                    <button type="button" data-index="{{product.id}}" class="btn btn-secondary mt-5 update-cart">update</button>
+                    <button type="button" data-index="{{product.id}}" class="btn btn-secondary mt-5 update-cart"><i class="fa-solid fa-wrench">update</i></button>
+                    <button type="button" data-index="{{product.id}}" class="btn btn-danger mt-5 delete-product"><i class="fa-solid fa-wrench">delete</i></button>
                   </td>
                   <td class="align-middle">
                     {%if product.sale_price%}
@@ -169,5 +170,34 @@ cart page
         });
     
     })
+    // delete item
+    $(document).on('click', '.delete-product', function(e){
+      e.preventDefault();
+      // grab the product id
+      //var productid = $(this).data('index');
+  
+      $.ajax({
+      type: 'POST',
+      url: '{% url 'cart_delete' %}',
+      data: {
+        product_id: $(this).data('index'),
+        
+        csrfmiddlewaretoken: '{{ csrf_token }}',
+        action: 'post'
+      },
+      success: function(json){
+          //console.log(json)
+          //document.getElementById("cart_quantity").textContent = json.qty
+          location.reload();
+      },
+  
+      error: function(xhr, errmsg, err){
+  
+      }
+  
+  
+      });
+  
+  })
   </script>
   {% endblock %}
