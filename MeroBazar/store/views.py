@@ -27,6 +27,13 @@ def category(request,cat):
     except:
         messages.success(request,("category doesnot exist!!"))
         return redirect('home')
+    
+
+def category_summary(request):
+    categories=Category.objects.all()
+    return render(request,'category_summary.html',{
+            'categories':categories
+        })
 
 
 def home(request):
